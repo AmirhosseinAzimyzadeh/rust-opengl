@@ -1,3 +1,5 @@
+use glium::Api::Gl;
+
 fn main() {
     let mut my_str = String::new();
     my_str.push_str("Hello World");
