@@ -30,7 +30,7 @@ fn loop_handler(
 
   let mut target = display.draw();
   target.clear_color(1.0, 0.0, 0.0, 1.0);
-  target.finish();
+  target.finish().unwrap();
   
   match event {
     glutin::event::Event::WindowEvent { event, .. } => match event {
