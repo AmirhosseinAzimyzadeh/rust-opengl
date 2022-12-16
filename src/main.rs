@@ -1,13 +1,11 @@
-use glium::Api::Gl;
+#[macro_use]
+extern crate glutin;
 
 fn main() {
-    let mut my_str = String::new();
-    my_str.push_str("Hello World");
-    my_str.split_whitespace().for_each(printer);
-    println!("{}", my_str);
-}
+    use glium::glutin;
 
-
-fn printer(x: &str) {
-    println!("your str is:{}", x);
+    let mut event_loop = glutin::event_loop::EventLoop::new();
+    let window_builder = glutin::window::WindowBuilder::new();
+    let context_builder = glutin::ContextBuilder::new();
+    let display = glium::Display::new(window_builder, context_builder, &event_loop);
 }
