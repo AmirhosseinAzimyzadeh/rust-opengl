@@ -6,7 +6,7 @@ extern crate glutin;
 fn main() {
   use glium::glutin;
 
-  let mut event_loop = glutin::event_loop::EventLoop::new();
+  let event_loop = glutin::event_loop::EventLoop::new();
   let window_builder = glutin::window::WindowBuilder::new();
   let context_builder = glutin::ContextBuilder::new();
   let display = glium::Display::new(window_builder, context_builder, &event_loop).unwrap();
@@ -29,7 +29,7 @@ fn loop_handler(
   *control_flow = glutin::event_loop::ControlFlow::WaitUntil(next_frame_time);
 
   let mut target = display.draw();
-  target.clear_color(0.0, 0.0, 0.0, 1.0);
+  target.clear_color(1.0, 0.0, 0.0, 1.0);
   target.finish();
   
   match event {
