@@ -16,7 +16,7 @@ fn main() {
 
 fn loop_handler(
   event: Event<()>,
-  target: &EventLoopWindowTarget<()>,
+  _: &EventLoopWindowTarget<()>,
   control_flow: &mut ControlFlow
 ) {
   use glium::glutin;
