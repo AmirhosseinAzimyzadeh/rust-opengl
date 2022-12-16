@@ -919,14 +919,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "random-rust-code"
-version = "0.1.0"
-dependencies = [
- "glium",
- "glutin 0.30.3",
-]
-
-[[package]]
 name = "raw-window-handle"
 version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -951,6 +943,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fb5a58c1855b4b6819d59012155603f0b22ad30cad752600aadfcb695265519a"
 dependencies = [
  "bitflags",
+]
+
+[[package]]
+name = "rust-opengl"
+version = "0.1.0"
+dependencies = [
+ "glium",
+ "glutin 0.30.3",
 ]
 
 [[package]]
