@@ -8,3 +8,5 @@ impl Vertex {
       Vertex { position }
     }
 }
+
+implement_vertex!(Vertex, position);
