@@ -1,7 +1,7 @@
-use glium::{glutin::{event::Event, event_loop::{ControlFlow, EventLoopWindowTarget}}, Display};
+mod vertex;
 
-#[macro_use]
-extern crate glutin;
+use glium::{glutin::{event::Event, event_loop::{ControlFlow, EventLoopWindowTarget}}, Display};
+use vertex::Vertex;
 
 fn main() {
   use glium::glutin;
