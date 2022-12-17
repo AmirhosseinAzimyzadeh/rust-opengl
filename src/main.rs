@@ -3,7 +3,7 @@ extern crate glium;
 
 mod vertex;
 
-use glium::{glutin::{event::Event, event_loop::{ControlFlow, EventLoopWindowTarget}}, Display};
+use glium::glutin::{event::Event, event_loop::{ControlFlow, EventLoopWindowTarget}};
 use vertex::Vertex;
 
 fn main() {
