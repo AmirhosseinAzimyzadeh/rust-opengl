@@ -42,15 +42,23 @@ fn main() {
         }
     "#;
 
-  let program = glium::Program::from_source(&display, vertex_shader_src, fragment_shader_src, None).unwrap();
+  let program = glium::Program::from_source(
+      &display,
+      vertex_shader_src,
+      fragment_shader_src,
+      None
+  ).unwrap();
 
 
   let mut time_step:f32 = -0.5;
   event_loop.run(move |e, t, cf| {
     loop_handler(e, t, cf);
+
     use glium::Surface;
+
     let mut target = display.draw();
     target.clear_color(0.0, 0.0, 1.0, 1.0);
+
     target.draw(
       &vertex_buffer,
       &indices,
@@ -58,6 +66,7 @@ fn main() {
       &glium::uniform! { time_step: time_step },
       &Default::default()
     ).unwrap();
+
     target.finish().unwrap();
 
     time_step += 0.0002;
