@@ -14,13 +14,6 @@ fn main() {
   let context_builder = glutin::ContextBuilder::new();
   let display = glium::Display::new(window_builder, context_builder, &event_loop).unwrap();
 
-  let shape = vec![
-    Vertex::new([0.5, 0.5]),
-    Vertex::new([-0.5, -0.5]),
-    Vertex::new([-0.5, 0.5]),
-  ];
-
-  let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
   let indices = glium::index::NoIndices(glium::index::PrimitiveType::TrianglesList);
 
   let vertex_shader_src = r#"
@@ -42,14 +35,27 @@ fn main() {
   let program = glium::Program::from_source(&display, vertex_shader_src, fragment_shader_src, None).unwrap();
 
 
+  let mut time_step:f32 = -0.5;
   event_loop.run(move |e, t, cf| {
     loop_handler(e, t, cf);
     use glium::Surface;
     let mut target = display.draw();
-    target.clear_color(0.0, 0.0, 1.0, 1.0);
+
+    let shape = vec![
+      Vertex::new([0.5 + time_step, 0.5]),
+      Vertex::new([-0.5 + time_step, -0.5]),
+      Vertex::new([-0.5 + time_step, 0.5]),
+    ];
+
+    let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
+
+    target.clear_color(0.0, 0.0, 0.0, 1.0);
     target.draw(&vertex_buffer, &indices, &program, &glium::uniforms::EmptyUniforms,
                     &Default::default()).unwrap();
     target.finish().unwrap();
+
+    time_step += 0.0002;
+    if time_step > 0.5 { time_step = -0.5; }
   });
 }
 
