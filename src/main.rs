@@ -14,13 +14,23 @@ fn main() {
   let context_builder = glutin::ContextBuilder::new();
   let display = glium::Display::new(window_builder, context_builder, &event_loop).unwrap();
 
+  let shape = vec![
+    Vertex::new([0.5, 0.5]),
+    Vertex::new([-0.5, -0.5]),
+    Vertex::new([-0.5, 0.5]),
+  ];
+
+  let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
   let indices = glium::index::NoIndices(glium::index::PrimitiveType::TrianglesList);
 
   let vertex_shader_src = r#"
         #version 140
         in vec2 position;
+        uniform float time_step;
         void main() {
-            gl_Position = vec4(position, 0.0, 1.0);
+            vec2 pos = position;
+            pos.x += time_step;
+            gl_Position = vec4(pos, 0.0, 1.0);
         }
     "#;
 
@@ -40,18 +50,14 @@ fn main() {
     loop_handler(e, t, cf);
     use glium::Surface;
     let mut target = display.draw();
-
-    let shape = vec![
-      Vertex::new([0.5 + time_step, 0.5]),
-      Vertex::new([-0.5 + time_step, -0.5]),
-      Vertex::new([-0.5 + time_step, 0.5]),
-    ];
-
-    let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
-
-    target.clear_color(0.0, 0.0, 0.0, 1.0);
-    target.draw(&vertex_buffer, &indices, &program, &glium::uniforms::EmptyUniforms,
-                    &Default::default()).unwrap();
+    target.clear_color(0.0, 0.0, 1.0, 1.0);
+    target.draw(
+      &vertex_buffer,
+      &indices,
+      &program,
+      &glium::uniform! { time_step: time_step },
+      &Default::default()
+    ).unwrap();
     target.finish().unwrap();
 
     time_step += 0.0002;
