@@ -26,11 +26,9 @@ fn main() {
   let vertex_shader_src = r#"
         #version 140
         in vec2 position;
-        uniform float time_step;
+        uniform mat4 matrix;
         void main() {
-            vec2 pos = position;
-            pos.x += time_step;
-            gl_Position = vec4(pos, 0.0, 1.0);
+            gl_Position = matrix * vec4(pos, 0.0, 1.0);
         }
     "#;
 
@@ -59,11 +57,19 @@ fn main() {
     let mut target = display.draw();
     target.clear_color(0.0, 0.0, 1.0, 1.0);
 
+    let uniforms = uniform! {
+        matrix: [
+          [1.0, 0.0, 0.0, 0.0],
+          [0.0, 1.0, 0.0, 0.0],
+          [0.0, 0.0, 1.0, 0.0],
+          [ time_step , 0.0, 0.0, 1.0f32],
+        ]
+    };
     target.draw(
       &vertex_buffer,
       &indices,
       &program,
-      &glium::uniform! { time_step: time_step },
+      &uniforms,
       &Default::default()
     ).unwrap();
 
