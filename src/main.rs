@@ -59,10 +59,10 @@ fn main() {
 
     let uniforms = uniform! {
         matrix: [
-          [1.0, 0.0, 0.0, 0.0],
-          [0.0, 1.0, 0.0, 0.0],
+          [time_step.cos(), time_step.sin(), 0.0, 0.0],
+          [-time_step.sin(), time_step.cos(), 0.0, 0.0],
           [0.0, 0.0, 1.0, 0.0],
-          [ time_step , 0.0, 0.0, 1.0f32],
+          [ 0.0 , 0.0, 0.0, 1.0f32],
         ]
     };
 
