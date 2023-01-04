@@ -6,6 +6,7 @@ mod vertex;
 
 use glium::glutin::{event::Event, event_loop::{ControlFlow, EventLoopWindowTarget}};
 use vertex::Vertex;
+use std::io::Cursor;
 
 fn main() {
   use glium::glutin;
@@ -14,6 +15,13 @@ fn main() {
   let window_builder = glutin::window::WindowBuilder::new();
   let context_builder = glutin::ContextBuilder::new();
   let display = glium::Display::new(window_builder, context_builder, &event_loop).unwrap();
+
+  // load image
+  let image = image::load(
+      Cursor::new(&include_bytes!("..\\assets\\texture.jpg")),
+      image::ImageFormat::Jpeg,
+  );
+
 
   let shape = vec![
     Vertex::new([0.5, 0.5]),
