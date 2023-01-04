@@ -20,8 +20,10 @@ fn main() {
   let image = image::load(
       Cursor::new(&include_bytes!("..\\assets\\texture.jpg")),
       image::ImageFormat::Jpeg,
-  );
+  ).unwrap().to_rgb8();
 
+  let dimention = image.dimensions();
+  let image = glium::texture::RawImage2d::from_raw_rgb_reversed(&image.into_raw(), dimention);
 
   let shape = vec![
     Vertex::new([0.5, 0.5]),
@@ -31,6 +33,7 @@ fn main() {
 
   let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
   let indices = glium::index::NoIndices(glium::index::PrimitiveType::TrianglesList);
+//  let image = glium::texture::Texture2dDataSource::Data(&image);
 
   let vertex_shader_src = r#"
         #version 140
