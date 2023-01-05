@@ -10,4 +10,4 @@ impl Vertex {
   }
 }
 
-implement_vertex!(Vertex, position);
+implement_vertex!(Vertex, position, texture_coordinate);
