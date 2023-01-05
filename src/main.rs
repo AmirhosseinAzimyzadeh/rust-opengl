@@ -33,7 +33,7 @@ fn main() {
 
   let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
   let indices = glium::index::NoIndices(glium::index::PrimitiveType::TrianglesList);
-//  let image = glium::texture::Texture2dDataSource::Data(&image);
+  let image = glium::texture::SrgbTexture2d::new(&display, image).unwrap();
 
   let vertex_shader_src = r#"
         #version 140
