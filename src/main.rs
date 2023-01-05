@@ -33,15 +33,16 @@ fn main() {
 
   let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
   let indices = glium::index::NoIndices(glium::index::PrimitiveType::TrianglesList);
-  let image = glium::texture::SrgbTexture2d::new(&display, image).unwrap();
+  let texture = glium::texture::SrgbTexture2d::new(&display, image).unwrap();
 
   let vertex_shader_src = r#"
         #version 140
         in vec2 position;
-        out vec2 out_attr;
+        in vec2 texture_coordinate;
+        out vec2 v_texture;
         uniform mat4 matrix;
         void main() {
-            out_attr = position;
+            v_texture = texture_coordinate;
             gl_Position = matrix * vec4(position, 0.0, 1.0);
         }
     "#;
@@ -49,9 +50,10 @@ fn main() {
   let fragment_shader_src = r#"
         #version 140
         out vec4 color;
-        in vec2 out_attr;
+        in vec2 v_texture;
+        uniform sampler2D tex;
         void main() {
-            color = vec4(out_attr, 0.0, 1.0);
+           color = texture(tex, v_texture);
         }
     "#;
 
@@ -78,7 +80,8 @@ fn main() {
           [-time_step.sin(), time_step.cos(), 0.0, 0.0],
           [0.0, 0.0, 1.0, 0.0],
           [ 0.0 , 0.0, 0.0, 1.0f32],
-        ]
+        ],
+        tex: &texture,
     };
 
     target.draw(
