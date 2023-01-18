@@ -5,6 +5,7 @@ extern crate image;
 mod vertex;
 mod normal;
 mod teapot;
+mod math;
 
 use glium::glutin::{event::Event, event_loop::{ControlFlow, EventLoopWindowTarget}};
 use vertex::Vertex;
@@ -69,16 +70,19 @@ fn main() {
     let mut target = display.draw();
     target.clear_color(0.0, 0.0, 0.0, 1.0);
 
-    let matrix = [
+    let base: math::Mat4 = [
       [0.01, 0.0, 0.0, 0.0],
       [0.0, 0.01, 0.0, 0.0],
       [0.0, 0.0, 0.01, 0.0],
       [0.0, 0.0, 0.0, 1.0f32]
     ];
 
-    let uniforms = uniform! {
-        matrix: matrix,
-    };
+    let matrix = math::mat4_multiply(
+      math::rotate_y(time_step),
+      base
+    );
+
+    let uniforms = uniform! { matrix: matrix };
 
     target.draw(
       (&positions, &normals),
