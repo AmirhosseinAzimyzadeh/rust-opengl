@@ -3,6 +3,8 @@ extern crate glium;
 extern crate image;
 
 mod vertex;
+mod normal;
+mod teapot;
 
 use glium::glutin::{event::Event, event_loop::{ControlFlow, EventLoopWindowTarget}};
 use vertex::Vertex;
@@ -26,9 +28,9 @@ fn main() {
   let image = glium::texture::RawImage2d::from_raw_rgb_reversed(&image.into_raw(), dimention);
 
   let shape = vec![
-    Vertex::new([0.5, 0.5], [0.0, 0.0]),
-    Vertex::new([-0.5, -0.5], [0.0, 1.0]),
-    Vertex::new([-0.5, 0.5], [1.0, 0.0]),
+    Vertex::new((0.5, 0.5, 0.0)),
+    Vertex::new((-0.5, -0.5, 0.0)),
+    Vertex::new((-0.5, 0.5, 0.0)),
   ];
 
   let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();

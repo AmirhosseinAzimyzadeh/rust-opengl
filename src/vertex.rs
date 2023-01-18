@@ -1,13 +1,12 @@
 #[derive(Copy, Clone)]
 pub struct Vertex {
-    position: [f32; 2],
-    texture_coordinate: [f32; 2],
+    pub position: (f32, f32, f32),
 }
 
 impl Vertex {
-  pub fn new(position: [f32; 2], texture_coordinate: [f32; 2]) -> Self {
-    Vertex { position, texture_coordinate }
+    pub fn new(position: (f32, f32, f32)) -> Self {
+    Vertex { position }
   }
 }
 
-implement_vertex!(Vertex, position, texture_coordinate);
+implement_vertex!(Vertex, position);
