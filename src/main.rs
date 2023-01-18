@@ -27,35 +27,28 @@ fn main() {
   let dimention = image.dimensions();
   let image = glium::texture::RawImage2d::from_raw_rgb_reversed(&image.into_raw(), dimention);
 
-  let shape = vec![
-    Vertex::new((0.5, 0.5, 0.0)),
-    Vertex::new((-0.5, -0.5, 0.0)),
-    Vertex::new((-0.5, 0.5, 0.0)),
-  ];
-
-  let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
-  let indices = glium::index::NoIndices(glium::index::PrimitiveType::TrianglesList);
-  let texture = glium::texture::SrgbTexture2d::new(&display, image).unwrap();
+  let positions = glium::VertexBuffer::new(&display, &teapot::VERTICES).unwrap();
+  let normals = glium::VertexBuffer::new(&display, &teapot::NORMALS).unwrap();
+  let indices = glium::IndexBuffer::new(
+          &display,
+          glium::index::PrimitiveType::TrianglesList,
+          &teapot::INDICES).unwrap();
 
   let vertex_shader_src = r#"
         #version 140
-        in vec2 position;
-        in vec2 texture_coordinate;
-        out vec2 v_texture;
+        in vec3 position;
+        in vec3 normal;
         uniform mat4 matrix;
         void main() {
-            v_texture = texture_coordinate;
-            gl_Position = matrix * vec4(position, 0.0, 1.0);
+            gl_Position = matrix * vec4(position, 1.0);
         }
     "#;
 
   let fragment_shader_src = r#"
         #version 140
         out vec4 color;
-        in vec2 v_texture;
-        uniform sampler2D tex;
         void main() {
-           color = texture(tex, v_texture);
+           color = vec4(1.0, 0.0, 0.0, 1.0);
         }
     "#;
 
@@ -78,16 +71,18 @@ fn main() {
 
     let uniforms = uniform! {
         matrix: [
-          [time_step.cos(), time_step.sin(), 0.0, 0.0],
-          [-time_step.sin(), time_step.cos(), 0.0, 0.0],
-          [0.0, 0.0, 1.0, 0.0],
-          [ 0.0 , 0.0, 0.0, 1.0f32],
+          [0.01, 0.0, 0.0, 0.0],
+          [0.0, 0.01, 0.0, 0.0],
+          [0.0, 0.0, 0.01, 0.0],
+          [0.0, 0.0, 0.0, 1.0f32]
         ],
-        tex: &texture,
     };
 
+    time_step.cos(), time_step.sin(), 0.0, 0.0],
+    [-time_step.sin(), time_step.cos(), 0.0, 0.0],
+
     target.draw(
-      &vertex_buffer,
+      (&positions, &normals),
       &indices,
       &program,
       &uniforms,
