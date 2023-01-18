@@ -67,7 +67,7 @@ fn main() {
     use glium::Surface;
 
     let mut target = display.draw();
-    target.clear_color(0.0, 0.0, 1.0, 1.0);
+    target.clear_color(0.0, 0.0, 0.0, 1.0);
 
     let uniforms = uniform! {
         matrix: [
@@ -77,9 +77,6 @@ fn main() {
           [0.0, 0.0, 0.0, 1.0f32]
         ],
     };
-
-    time_step.cos(), time_step.sin(), 0.0, 0.0],
-    [-time_step.sin(), time_step.cos(), 0.0, 0.0],
 
     target.draw(
       (&positions, &normals),
