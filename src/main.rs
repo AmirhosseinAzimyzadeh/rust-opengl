@@ -69,13 +69,15 @@ fn main() {
     let mut target = display.draw();
     target.clear_color(0.0, 0.0, 0.0, 1.0);
 
+    let matrix = [
+      [0.01, 0.0, 0.0, 0.0],
+      [0.0, 0.01, 0.0, 0.0],
+      [0.0, 0.0, 0.01, 0.0],
+      [0.0, 0.0, 0.0, 1.0f32]
+    ];
+
     let uniforms = uniform! {
-        matrix: [
-          [0.01, 0.0, 0.0, 0.0],
-          [0.0, 0.01, 0.0, 0.0],
-          [0.0, 0.0, 0.01, 0.0],
-          [0.0, 0.0, 0.0, 1.0f32]
-        ],
+        matrix: matrix,
     };
 
     target.draw(
