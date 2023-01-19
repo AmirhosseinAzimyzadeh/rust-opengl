@@ -32,7 +32,7 @@ fn main() {
   ).unwrap().to_rgb8();
 
   let dimention = image.dimensions();
-  let image = glium::texture::RawImage2d::from_raw_rgb_reversed(&image.into_raw(), dimention);
+  // let image = glium::texture::RawImage2d::from_raw_rgb_reversed(&image.into_raw(), dimention);
 
   let positions = glium::VertexBuffer::new(&display, &teapot::VERTICES).unwrap();
   let normals = glium::VertexBuffer::new(&display, &teapot::NORMALS).unwrap();
