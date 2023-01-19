@@ -26,12 +26,12 @@ fn main() {
   let display = glium::Display::new(window_builder, context_builder, &event_loop).unwrap();
 
   // load image
-  let image = image::load(
-      Cursor::new(&include_bytes!("..\\assets\\texture.jpg")),
-      image::ImageFormat::Jpeg,
-  ).unwrap().to_rgb8();
+  // let image = image::load(
+  //     Cursor::new(&include_bytes!("..\\assets\\texture.jpg")),
+  //     image::ImageFormat::Jpeg,
+  // ).unwrap().to_rgb8();
 
-  let dimention = image.dimensions();
+  // let dimention = image.dimensions();
   // let image = glium::texture::RawImage2d::from_raw_rgb_reversed(&image.into_raw(), dimention);
 
   let positions = glium::VertexBuffer::new(&display, &teapot::VERTICES).unwrap();
