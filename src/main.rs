@@ -9,10 +9,16 @@ mod math;
 
 use glium::glutin::{event::Event, event_loop::{ControlFlow, EventLoopWindowTarget}};
 use vertex::Vertex;
-use std::io::Cursor;
+use std::{io::Cursor, f32::consts::PI};
 
 fn main() {
   use glium::glutin;
+
+  let params = glium::DrawParameters {
+    multisampling: true,
+    smooth: Some(glium::draw_parameters::Smooth::Nicest),
+    .. Default::default()
+  };
 
   let event_loop = glutin::event_loop::EventLoop::new();
   let window_builder = glutin::window::WindowBuilder::new();
@@ -42,7 +48,7 @@ fn main() {
         out vec3 v_normal;
         uniform mat4 matrix;
         void main() {
-          v_normal = transpose(inverse(mat3(matrix))) * normal;
+          v_normal = transpose((mat3(matrix))) * normal;
           gl_Position = matrix * vec4(position, 1.0);
         }
     "#;
@@ -54,7 +60,7 @@ fn main() {
         uniform vec3 u_light;
         void main() {
           float brightness = dot(normalize(v_normal), normalize(u_light));
-          vec3 dark_color = vec3(0.6, 0.0, 0.0);
+          vec3 dark_color = vec3(0.4, 0.0, 0.0);
           vec3 regular_color = vec3(1.0, 0.0, 0.0);
           color = vec4(mix(dark_color, regular_color, brightness), 1.0);
         }
@@ -89,6 +95,16 @@ fn main() {
       base
     );
 
+    let matrix = math::mat4_multiply(
+      math::rotate_x(time_step),
+      matrix
+    );
+
+    let matrix = math::mat4_multiply(
+      math::rotate_z(time_step),
+      matrix
+    );
+
     let light = [-1.0, 0.4, 0.9f32];
 
     let uniforms = uniform! {
@@ -101,13 +117,13 @@ fn main() {
       &indices,
       &program,
       &uniforms,
-      &Default::default()
+      &params,
     ).unwrap();
 
     target.finish().unwrap();
 
     time_step += 0.0002;
-    if time_step > 0.5 { time_step = -0.5; }
+    if time_step > (2.0 * PI) { time_step = -0.5; }
   });
 }
 
@@ -117,10 +133,10 @@ fn loop_handler(
   control_flow: &mut ControlFlow,
 ) {
   use glium::glutin;
-  let next_frame_time = std::time::Instant::now()
-    + std::time::Duration::from_nanos(16_666_667);
+  // let next_frame_time = std::time::Instant::now()
+  //   + std::time::Duration::from_nanos(16_666_667);
 
-  *control_flow = glutin::event_loop::ControlFlow::WaitUntil(next_frame_time);
+  // *control_flow = glutin::event_loop::ControlFlow::WaitUntil(next_frame_time);
   
   match event {
     glutin::event::Event::WindowEvent { event, .. } => match event {
