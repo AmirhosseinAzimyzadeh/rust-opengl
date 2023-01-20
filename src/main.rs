@@ -8,8 +8,7 @@ mod teapot;
 mod math;
 
 use glium::glutin::{event::Event, event_loop::{ControlFlow, EventLoopWindowTarget}};
-use vertex::Vertex;
-use std::{io::Cursor, f32::consts::PI};
+use std::{ f32::consts::PI};
 
 fn main() {
   use glium::glutin;
