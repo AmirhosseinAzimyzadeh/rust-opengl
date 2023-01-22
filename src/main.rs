@@ -15,13 +15,18 @@ fn main() {
 
   let params = glium::DrawParameters {
     multisampling: true,
+    depth: glium::Depth {
+      test: glium::draw_parameters::DepthTest::IfLess,
+      write: true,
+      .. Default::default()
+    },
     smooth: Some(glium::draw_parameters::Smooth::Nicest),
     .. Default::default()
   };
 
   let event_loop = glutin::event_loop::EventLoop::new();
   let window_builder = glutin::window::WindowBuilder::new();
-  let context_builder = glutin::ContextBuilder::new();
+  let context_builder = glutin::ContextBuilder::new().with_depth_buffer(24);
   let display = glium::Display::new(window_builder, context_builder, &event_loop).unwrap();
 
   // load image
@@ -80,7 +85,7 @@ fn main() {
     use glium::Surface;
 
     let mut target = display.draw();
-    target.clear_color(0.0, 0.0, 0.0, 1.0);
+    target.clear_color_and_depth((0.0, 0.0, 1.0, 1.0), 1.0);
 
     let base: math::Mat4 = [
       [0.01, 0.0, 0.0, 0.0],
