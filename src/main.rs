@@ -85,13 +85,13 @@ fn main() {
     use glium::Surface;
 
     let mut target = display.draw();
-    target.clear_color_and_depth((0.0, 0.0, 1.0, 1.0), 1.0);
+    target.clear_color_and_depth((0.0, 0.0, 0.0, 1.0), 1.0);
 
     let base: math::Mat4 = [
       [0.01, 0.0, 0.0, 0.0],
       [0.0, 0.01, 0.0, 0.0],
       [0.0, 0.0, 0.01, 0.0],
-      [0.0, 0.0, 0.0, 1.0f32]
+      [0.0, 0.0, 0.01, 1.0f32]
     ];
 
     let matrix = math::mat4_multiply(
