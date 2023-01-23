@@ -29,14 +29,6 @@ fn main() {
   let context_builder = glutin::ContextBuilder::new().with_depth_buffer(24);
   let display = glium::Display::new(window_builder, context_builder, &event_loop).unwrap();
 
-  // load image
-  // let image = image::load(
-  //     Cursor::new(&include_bytes!("..\\assets\\texture.jpg")),
-  //     image::ImageFormat::Jpeg,
-  // ).unwrap().to_rgb8();
-
-  // let dimention = image.dimensions();
-  // let image = glium::texture::RawImage2d::from_raw_rgb_reversed(&image.into_raw(), dimention);
 
   let positions = glium::VertexBuffer::new(&display, &teapot::VERTICES).unwrap();
   let normals = glium::VertexBuffer::new(&display, &teapot::NORMALS).unwrap();
@@ -51,9 +43,10 @@ fn main() {
         in vec3 normal;
         out vec3 v_normal;
         uniform mat4 matrix;
+        uniform mat4 perspective;
         void main() {
-          v_normal = transpose((mat3(matrix))) * normal;
-          gl_Position = matrix * vec4(position, 1.0);
+          v_normal = transpose(inverse(mat3(matrix))) * normal;
+          gl_Position = perspective * matrix * vec4(position, 1.0);
         }
     "#;
 
@@ -91,8 +84,23 @@ fn main() {
       [0.01, 0.0, 0.0, 0.0],
       [0.0, 0.01, 0.0, 0.0],
       [0.0, 0.0, 0.01, 0.0],
-      [0.0, 0.0, 0.01, 1.0f32]
+      [0.0, 0.0, 2.0, 1.0f32]
     ];
+
+    let perspective = {
+      let (width, height) = target.get_dimensions();
+      let aspect_ratio = height as f32 / width as f32;
+      let fov: f32 = 3.141592 / 3.0;
+      let zfar = 1024.0;
+      let znear = 0.1;
+      let f = 1.0 / (fov / 2.0).tan();
+      [
+        [f * aspect_ratio, 0.0, 0.0, 0.0],
+        [0.0, f, 0.0, 0.0],
+        [0.0, 0.0, (zfar+znear)/(zfar-znear), 1.0],
+        [0.0, 0.0, -(2.0*zfar*znear)/(zfar-znear), 0.0],
+      ]
+    };
 
     let matrix = math::mat4_multiply(
       math::rotate_y(time_step),
@@ -114,6 +122,7 @@ fn main() {
     let uniforms = uniform! {
       matrix: matrix,
       u_light: light,
+      perspective: perspective,
     };
 
     target.draw(
@@ -137,10 +146,6 @@ fn loop_handler(
   control_flow: &mut ControlFlow,
 ) {
   use glium::glutin;
-  // let next_frame_time = std::time::Instant::now()
-  //   + std::time::Duration::from_nanos(16_666_667);
-
-  // *control_flow = glutin::event_loop::ControlFlow::WaitUntil(next_frame_time);
   
   match event {
     glutin::event::Event::WindowEvent { event, .. } => match event {
