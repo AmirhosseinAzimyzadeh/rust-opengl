@@ -44,9 +44,10 @@ fn main() {
         out vec3 v_normal;
         uniform mat4 matrix;
         uniform mat4 perspective;
+        uniform mat4 transform;
         void main() {
           v_normal = transpose(inverse(mat3(matrix))) * normal;
-          gl_Position = perspective * matrix * vec4(position, 1.0);
+          gl_Position =  perspective * matrix * transform * vec4(position, 1.0);
         }
     "#;
 
@@ -80,11 +81,18 @@ fn main() {
     let mut target = display.draw();
     target.clear_color_and_depth((0.0, 0.0, 0.0, 1.0), 1.0);
 
-    let base: math::Mat4 = [
+    let matrix: math::Mat4 = [
       [0.01, 0.0, 0.0, 0.0],
       [0.0, 0.01, 0.0, 0.0],
       [0.0, 0.0, 0.01, 0.0],
-      [0.0, 0.0, 2.0, 1.0f32]
+      [0.0, 0.0, 3.0, 1.0f32]
+    ];
+
+    let transform: math::Mat4 = [
+      [1.0, 0.0, 0.0, 0.0],
+      [0.0, 1.0, 0.0, 0.0],
+      [0.0, 0.0, 1.0, 0.0],
+      [0.0, 0.0, 0.0, 1.0f32]
     ];
 
     let perspective = {
@@ -102,19 +110,19 @@ fn main() {
       ]
     };
 
-    let matrix = math::mat4_multiply(
+    let transform = math::mat4_multiply(
       math::rotate_y(time_step),
-      base
+      transform
     );
 
-    let matrix = math::mat4_multiply(
+    let transform = math::mat4_multiply(
       math::rotate_x(time_step),
-      matrix
+      transform
     );
 
-    let matrix = math::mat4_multiply(
+    let transform = math::mat4_multiply(
       math::rotate_z(time_step),
-      matrix
+      transform
     );
 
     let light = [-1.0, 0.4, 0.9f32];
@@ -123,6 +131,7 @@ fn main() {
       matrix: matrix,
       u_light: light,
       perspective: perspective,
+      transform: transform,
     };
 
     target.draw(
