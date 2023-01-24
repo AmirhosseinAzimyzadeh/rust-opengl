@@ -1,7 +1,11 @@
 #version 140
+
 out vec4 color;
+
 in vec3 v_normal;
+
 uniform vec3 u_light;
+
 void main() {
   float brightness = dot(normalize(v_normal), normalize(u_light));
   vec3 dark_color = vec3(0.4, 0.0, 0.0);
