@@ -6,6 +6,7 @@ mod vertex;
 mod normal;
 mod teapot;
 mod math;
+mod utils;
 
 use glium::glutin::{event::Event, event_loop::{ControlFlow, EventLoopWindowTarget}};
 use std::{ f32::consts::PI};
@@ -37,37 +38,13 @@ fn main() {
           glium::index::PrimitiveType::TrianglesList,
           &teapot::INDICES).unwrap();
 
-  let vertex_shader_src = r#"
-        #version 140
-        in vec3 position;
-        in vec3 normal;
-        out vec3 v_normal;
-        uniform mat4 matrix;
-        uniform mat4 perspective;
-        uniform mat4 transform;
-        void main() {
-          v_normal = transpose(inverse(mat3(matrix))) * normal;
-          gl_Position =  perspective * matrix * transform * vec4(position, 1.0);
-        }
-    "#;
-
-  let fragment_shader_src = r#"
-        #version 140
-        out vec4 color;
-        in vec3 v_normal;
-        uniform vec3 u_light;
-        void main() {
-          float brightness = dot(normalize(v_normal), normalize(u_light));
-          vec3 dark_color = vec3(0.4, 0.0, 0.0);
-          vec3 regular_color = vec3(1.0, 0.0, 0.0);
-          color = vec4(mix(dark_color, regular_color, brightness), 1.0);
-        }
-    "#;
+  let vertex_shader_src = utils::read_shader("src/shaders/vertex_shader.glsl");
+  let fragment_shader_src = utils::read_shader("src/shaders/fragment_shader.glsl");
 
   let program = glium::Program::from_source(
       &display,
-      vertex_shader_src,
-      fragment_shader_src,
+      &vertex_shader_src,
+      &fragment_shader_src,
       None
   ).unwrap();
 
@@ -95,20 +72,7 @@ fn main() {
       [0.0, 0.0, 0.0, 1.0f32]
     ];
 
-    let perspective = {
-      let (width, height) = target.get_dimensions();
-      let aspect_ratio = height as f32 / width as f32;
-      let fov: f32 = 3.141592 / 3.0;
-      let zfar = 1024.0;
-      let znear = 0.1;
-      let f = 1.0 / (fov / 2.0).tan();
-      [
-        [f * aspect_ratio, 0.0, 0.0, 0.0],
-        [0.0, f, 0.0, 0.0],
-        [0.0, 0.0, (zfar+znear)/(zfar-znear), 1.0],
-        [0.0, 0.0, -(2.0*zfar*znear)/(zfar-znear), 0.0],
-      ]
-    };
+    let perspective = utils::perspective_matrix(target.get_dimensions());
 
     let transform = math::mat4_multiply(
       math::rotate_y(time_step),
@@ -145,7 +109,7 @@ fn main() {
     target.finish().unwrap();
 
     time_step += 0.0002;
-    if time_step > (2.0 * PI) { time_step = -0.5; }
+    if time_step > (5.0 * PI) { time_step = -0.5; }
   });
 }
 
