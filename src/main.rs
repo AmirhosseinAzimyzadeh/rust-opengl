@@ -22,6 +22,7 @@ fn main() {
       .. Default::default()
     },
     smooth: Some(glium::draw_parameters::Smooth::Nicest),
+    backface_culling: glium::draw_parameters::BackfaceCullingMode::CullClockwise,
     .. Default::default()
   };
 
