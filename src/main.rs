@@ -14,17 +14,7 @@ use std::{ f32::consts::PI};
 fn main() {
   use glium::glutin;
 
-  let params = glium::DrawParameters {
-    multisampling: true,
-    depth: glium::Depth {
-      test: glium::draw_parameters::DepthTest::IfLess,
-      write: true,
-      .. Default::default()
-    },
-    smooth: Some(glium::draw_parameters::Smooth::Nicest),
-    backface_culling: glium::draw_parameters::BackfaceCullingMode::CullClockwise,
-    .. Default::default()
-  };
+  let params = utils::get_default_parameters();
 
   let event_loop = glutin::event_loop::EventLoop::new();
   let window_builder = glutin::window::WindowBuilder::new();
