@@ -1,4 +1,5 @@
 use crate::math;
+use glium::{self, DrawParameters};
 
 pub fn read_shader(path: &str) -> String {
   use std::fs::File;
@@ -25,4 +26,21 @@ pub fn perspective_matrix((width, height): (u32, u32)) -> math::Mat4 {
     [0.0, 0.0, (z_far+z_near)/(z_far-z_near), 1.0],
     [0.0, 0.0, -(2.0*z_far*z_near)/(z_far-z_near), 0.0],
   ]
+}
+
+pub fn get_default_parameters<'a>() -> DrawParameters<'a> {
+
+  let params = DrawParameters {
+    multisampling: true,
+    depth: glium::Depth {
+      test: glium::draw_parameters::DepthTest::IfLess,
+      write: true,
+      .. Default::default()
+    },
+    smooth: Some(glium::draw_parameters::Smooth::Nicest),
+    backface_culling: glium::draw_parameters::BackfaceCullingMode::CullClockwise,
+    .. Default::default()
+  };
+
+  params
 }
